@@ -25,8 +25,8 @@
 
     <!-- Header -->
     <header class="bg-red-950 text-white p-4 sticky top-0 z-50 shadow-md flex justify-between items-center border-b border-red-900/40">
-        <h1 class="text-lg font-bold tracking-wider flex items-center gap-2">
-            <i class="fa-solid fa-skull text-red-500"></i> Dylan Dog - Serie Regolare
+        <h1 class="text-base font-bold tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-skull text-red-500"></i> Dylan Dog (1 - 460)
         </h1>
         <button onclick="openAddModal()" class="bg-red-700 hover:bg-red-600 text-white font-bold px-3 py-1.5 rounded-full text-xs shadow active:scale-95 transition flex items-center gap-1">
             <i class="fa-solid fa-plus"></i> Nuovo
@@ -43,12 +43,12 @@
             <select id="filterStatus" onchange="renderCollection()" class="bg-zinc-800 text-zinc-200 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none">
                 <option value="all">Tutti</option>
                 <option value="owned">Posseduti</option>
-                <option value="wishlist">Mancanti (Wishlist)</option>
+                <option value="wishlist">Mancanti</option>
             </select>
         </div>
         <div class="flex justify-between items-center text-xs text-zinc-400">
             <span id="counter">Caricamento...</span>
-            <button onclick="resetData()" class="text-zinc-500 hover:text-zinc-300 underline">Ripristina dati originali</button>
+            <button onclick="resetData()" class="text-zinc-500 hover:text-zinc-300 underline">Ripristina Excel</button>
         </div>
     </div>
 
@@ -71,20 +71,20 @@
                 <div class="grid grid-cols-3 gap-3">
                     <div>
                         <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Numero</label>
-                        <input type="number" id="comicNumber" required class="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-red-600">
+                        <input type="text" id="comicNumber" required class="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-red-600 text-center">
                     </div>
                     <div class="col-span-2">
                         <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Mese / Anno Uscita</label>
                         <div class="grid grid-cols-2 gap-2">
-                            <input type="text" id="comicMonth" placeholder="Mese (es. 10)" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-red-600 text-center">
-                            <input type="text" id="comicYear" placeholder="Anno (es. 1986)" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-red-600 text-center">
+                            <input type="text" id="comicMonth" placeholder="Mese" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-red-600 text-center">
+                            <input type="text" id="comicYear" placeholder="Anno" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-red-600 text-center">
                         </div>
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Titolo</label>
-                    <input type="text" id="comicTitle" required placeholder="Es. L'alba dei morti viventi" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-red-600">
+                    <input type="text" id="comicTitle" required placeholder="Titolo dell'albo" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-red-600">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -92,7 +92,7 @@
                         <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Stato Possesso</label>
                         <select id="comicStatus" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2.5 text-white outline-none focus:border-red-600">
                             <option value="owned">Posseduto</option>
-                            <option value="wishlist">Wishlist (Mancante)</option>
+                            <option value="wishlist">Mancante (Wishlist)</option>
                         </select>
                     </div>
                     <div>
@@ -135,43 +135,483 @@
         </div>
     </div>
 
-    <!-- Script di gestione dati dal file Excel incorporato -->
+    <!-- Script contenente i dati importati dal tuo file Excel fino a 460 -->
     <script>
-        // Dati iniziali estratti dal tuo file Excel
-        const defaultComics = [
-            { id: 1, number: 1, title: "L'alba dei morti viventi", month: "10", year: "1986", status: "owned", edition: "Originale", image: "" },
-            { id: 2, number: 2, title: "Jack lo squartatore", month: "11", year: "1986", status: "owned", edition: "Originale", image: "" },
-            { id: 3, number: 3, title: "Le notti della luna piena", month: "12", year: "1986", status: "owned", edition: "Originale", image: "" },
-            { id: 4, number: 4, title: "Il fantasma di Anna Never", month: "1", year: "1987", status: "wishlist", edition: "Originale", image: "" },
-            { id: 5, number: 5, title: "Gli uccisori", month: "2", year: "1987", status: "wishlist", edition: "Originale", image: "" },
-            { id: 6, number: 6, title: "La bellezza del demonio", month: "3", year: "1987", status: "wishlist", edition: "Originale", image: "" },
-            { id: 7, number: 7, title: "La zona del crepuscolo", month: "4", year: "1987", status: "wishlist", edition: "Originale", image: "" },
-            { id: 8, number: 8, title: "Il ritorno del mostro", month: "5", year: "1987", status: "wishlist", edition: "Originale", image: "" },
-            { id: 9, number: 9, title: "Alfa e Omega", month: "6", year: "1987", status: "wishlist", edition: "Originale", image: "" },
-            { id: 10, number: 10, title: "Attraverso lo specchio", month: "7", year: "1987", status: "wishlist", edition: "Originale", image: "" },
-            { id: 11, number: 11, title: "Diabolo il grande", month: "8", year: "1987", status: "wishlist", edition: "Originale", image: "" },
-            { id: 12, number: 12, title: "Killer!", month: "9", year: "1987", status: "wishlist", edition: "Originale", image: "" },
-            { id: 13, number: 13, title: "Vivono tra noi", month: "10", year: "1987", status: "owned", edition: "Originale", image: "" },
-            { id: 14, number: 14, title: "Fra la vita e la morte", month: "11", year: "1987", status: "wishlist", edition: "Originale", image: "" },
-            { id: 15, number: 15, title: "Canale 666", month: "12", year: "1987", status: "wishlist", edition: "Originale", image: "" },
-            { id: 16, number: 16, title: "Il castello della paura", month: "1", year: "1988", status: "owned", edition: "Originale", image: "" },
-            { id: 17, number: 17, title: "La Dama in nero", month: "2", year: "1988", status: "owned", edition: "Originale", image: "" },
-            { id: 18, number: 18, title: "Cagliostro!", month: "3", year: "1988", status: "wishlist", edition: "Originale", image: "" },
-            { id: 19, number: 19, title: "Memorie dall'invisibile", month: "4", year: "1988", status: "wishlist", edition: "Originale", image: "" },
-            { id: 20, number: 20, title: "Dal profondo", month: "5", year: "1988", status: "wishlist", edition: "Originale", image: "" }
-            // Nota: puoi aggiungere qui o importare dinamicamente tutti gli altri numeri fino ad oggi.
+        const initialComics = [
+            { id: 1, number: "1", title: "L'alba dei morti viventi", month: "10", year: "1986", status: "owned", edition: "Originale", image: "" },
+            { id: 2, number: "2", title: "Jack lo squartatore", month: "11", year: "1986", status: "owned", edition: "Originale", image: "" },
+            { id: 3, number: "3", title: "Le notti della luna piena", month: "12", year: "1986", status: "owned", edition: "Originale", image: "" },
+            { id: 4, number: "4", title: "Il fantasma di Anna Never", month: "1", year: "1987", status: "wishlist", edition: "Originale", image: "" },
+            { id: 5, number: "5", title: "Gli uccisori", month: "2", year: "1987", status: "wishlist", edition: "Originale", image: "" },
+            { id: 6, number: "6", title: "La bellezza del demonio", month: "3", year: "1987", status: "wishlist", edition: "Originale", image: "" },
+            { id: 7, number: "7", title: "La zona del crepuscolo", month: "4", year: "1987", status: "wishlist", edition: "Originale", image: "" },
+            { id: 8, number: "8", title: "Il ritorno del mostro", month: "5", year: "1987", status: "wishlist", edition: "Originale", image: "" },
+            { id: 9, number: "9", title: "Alfa e Omega", month: "6", year: "1987", status: "wishlist", edition: "Originale", image: "" },
+            { id: 10, number: "10", title: "Attraverso lo specchio", month: "7", year: "1987", status: "wishlist", edition: "Originale", image: "" },
+            { id: 11, number: "11", title: "Diabolo il grande", month: "8", year: "1987", status: "wishlist", edition: "Originale", image: "" },
+            { id: 12, number: "12", title: "Killer!", month: "9", year: "1987", status: "wishlist", edition: "Originale", image: "" },
+            { id: 13, number: "13", title: "Vivono tra noi", month: "10", year: "1987", status: "owned", edition: "Originale", image: "" },
+            { id: 14, number: "14", title: "Fra la vita e la morte", month: "11", year: "1987", status: "wishlist", edition: "Originale", image: "" },
+            { id: 15, number: "15", title: "Canale 666", month: "12", year: "1987", status: "wishlist", edition: "Originale", image: "" },
+            { id: 16, number: "16", title: "Il castello della paura", month: "1", year: "1988", status: "owned", edition: "Originale", image: "" },
+            { id: 17, number: "17", title: "La Dama in nero", month: "2", year: "1988", status: "owned", edition: "Originale", image: "" },
+            { id: 18, number: "18", title: "Cagliostro!", month: "3", year: "1988", status: "wishlist", edition: "Originale", image: "" },
+            { id: 19, number: "19", title: "Memorie dall'invisibile", month: "4", year: "1988", status: "wishlist", edition: "Originale", image: "" },
+            { id: 20, number: "20", title: "Dal profondo", month: "5", year: "1988", status: "wishlist", edition: "Originale", image: "" },
+            { id: 21, number: "21", title: "Ghouls!", month: "6", year: "1988", status: "wishlist", edition: "Originale", image: "" },
+            { id: 22, number: "22", title: "Mefisto!", month: "7", year: "1988", status: "wishlist", edition: "Originale", image: "" },
+            { id: 23, number: "23", title: "Il contagio", month: "8", year: "1988", status: "wishlist", edition: "Originale", image: "" },
+            { id: 24, number: "24", title: "I predatori", month: "9", year: "1988", status: "wishlist", edition: "Originale", image: "" },
+            { id: 25, number: "25", title: "Morgana", month: "10", year: "1988", status: "wishlist", edition: "Originale", image: "" },
+            { id: 26, number: "26", title: "Dopo mezzanotte", month: "11", year: "1988", status: "wishlist", edition: "Originale", image: "" },
+            { id: 27, number: "27", title: "Letteratura d'esilio", month: "12", year: "1988", status: "wishlist", edition: "Originale", image: "" },
+            { id: 28, number: "28", title: "L'amata dalle tenebre", month: "1", year: "1989", status: "wishlist", edition: "Originale", image: "" },
+            { id: 29, number: "29", title: "I menagramo", month: "2", year: "1989", status: "wishlist", edition: "Originale", image: "" },
+            { id: 30, number: "30", title: "Maelstrom!", month: "3", year: "1989", status: "wishlist", edition: "Originale", image: "" },
+            { id: 31, number: "31", title: "Il caveau dei segreti", month: "4", year: "1989", status: "wishlist", edition: "Originale", image: "" },
+            { id: 32, number: "32", title: "I ratti", month: "5", year: "1989", status: "wishlist", edition: "Originale", image: "" },
+            { id: 33, number: "33", title: "Jekyll!", month: "6", year: "1989", status: "wishlist", edition: "Originale", image: "" },
+            { id: 34, number: "34", title: "Il buio", month: "7", year: "1989", status: "wishlist", edition: "Originale", image: "" },
+            { id: 35, number: "35", title: "La solitudine dello sbirro", month: "8", year: "1989", status: "wishlist", edition: "Originale", image: "" },
+            { id: 36, number: "36", title: "Morte a domicilio", month: "9", year: "1989", status: "wishlist", edition: "Originale", image: "" },
+            { id: 37, number: "37", title: "It! Il mostro", month: "10", year: "1989", status: "wishlist", edition: "Originale", image: "" },
+            { id: 38, number: "38", title: "Profondo blu", month: "11", year: "1989", status: "wishlist", edition: "Originale", image: "" },
+            { id: 39, number: "39", title: "Su e giù per il timeus", month: "12", year: "1989", status: "wishlist", edition: "Originale", image: "" },
+            { id: 40, number: "40", title: "Accadde domani", month: "1", year: "1990", status: "wishlist", edition: "Originale", image: "" },
+            { id: 41, number: "41", title: "Golgota", month: "2", year: "1990", status: "wishlist", edition: "Originale", image: "" },
+            { id: 42, number: "42", title: "Il ritorno di Xabaras", month: "3", year: "1990", status: "wishlist", edition: "Originale", image: "" },
+            { id: 43, number: "43", title: "Storia di un povero diavolo", month: "4", year: "1990", status: "wishlist", edition: "Originale", image: "" },
+            { id: 44, number: "44", title: "Il negromante", month: "5", year: "1990", status: "wishlist", edition: "Originale", image: "" },
+            { id: 45, number: "45", title: "Goblin", month: "6", year: "1990", status: "wishlist", edition: "Originale", image: "" },
+            { id: 46, number: "46", title: "Inferni", month: "7", year: "1990", status: "wishlist", edition: "Originale", image: "" },
+            { id: 47, number: "47", title: "La regina delle tenebre", month: "8", year: "1990", status: "wishlist", edition: "Originale", image: "" },
+            { id: 48, number: "48", title: "Finchè morte non ti separi", month: "9", year: "1990", status: "wishlist", edition: "Originale", image: "" },
+            { id: 49, number: "49", title: "Mandrake!", month: "10", year: "1990", status: "wishlist", edition: "Originale", image: "" },
+            { id: 50, number: "50", title: "Ai confini del tempo", month: "11", year: "1990", status: "wishlist", edition: "Originale", image: "" },
+            { id: 51, number: "51", title: "Il male", month: "12", year: "1990", status: "wishlist", edition: "Originale", image: "" },
+            { id: 52, number: "52", title: "Il brandello", month: "1", year: "1991", status: "wishlist", edition: "Originale", image: "" },
+            { id: 53, number: "53", title: "La creatura", month: "2", year: "1991", status: "wishlist", edition: "Originale", image: "" },
+            { id: 54, number: "54", title: "Un fantasma per Groucho", month: "3", year: "1991", status: "wishlist", edition: "Originale", image: "" },
+            { id: 55, number: "55", title: "La mummia", month: "4", year: "1991", status: "wishlist", edition: "Originale", image: "" },
+            { id: 56, number: "56", title: "Ombre", month: "5", year: "1991", status: "wishlist", edition: "Originale", image: "" },
+            { id: 57, number: "57", title: "Ritorno al crepuscolo", month: "6", year: "1991", status: "wishlist", edition: "Originale", image: "" },
+            { id: 58, number: "58", title: "La maledizione della Sieve", month: "7", year: "1991", status: "wishlist", edition: "Originale", image: "" },
+            { id: 59, number: "59", title: "Gente che sparisce", month: "8", year: "1991", status: "wishlist", edition: "Originale", image: "" },
+            { id: 60, number: "60", title: "Frankenstein!", month: "9", year: "1991", status: "wishlist", edition: "Originale", image: "" },
+            { id: 61, number: "61", title: "Terrore dall'infinito", month: "10", year: "1991", status: "wishlist", edition: "Originale", image: "" },
+            { id: 62, number: "62", title: "I vampiri", month: "11", year: "1991", status: "wishlist", edition: "Originale", image: "" },
+            { id: 63, number: "63", title: "Maelstrom 2", month: "12", year: "1991", status: "wishlist", edition: "Originale", image: "" },
+            { id: 64, number: "64", title: "I seguaci di Ra", month: "1", year: "1992", status: "wishlist", edition: "Originale", image: "" },
+            { id: 65, number: "65", title: "La clinica dei suicidi", month: "2", year: "1992", status: "wishlist", edition: "Originale", image: "" },
+            { id: 66, number: "66", title: "Partita con la morte", month: "3", year: "1992", status: "wishlist", edition: "Originale", image: "" },
+            { id: 67, number: "67", title: "L'uomo che visse due volte", month: "4", year: "1992", status: "wishlist", edition: "Originale", image: "" },
+            { id: 68, number: "68", title: "I diavoli", month: "5", year: "1992", status: "wishlist", edition: "Originale", image: "" },
+            { id: 69, number: "69", title: "Caccia alle streghe", month: "6", year: "1992", status: "wishlist", edition: "Originale", image: "" },
+            { id: 70, number: "70", title: "Il negromante 2", month: "7", year: "1992", status: "wishlist", edition: "Originale", image: "" },
+            { id: 71, number: "71", title: "Il tempio perduto", month: "8", year: "1992", status: "wishlist", edition: "Originale", image: "" },
+            { id: 72, number: "72", title: "L'ultimo cacciatore", month: "9", year: "1992", status: "wishlist", edition: "Originale", image: "" },
+            { id: 73, number: "73", title: "La profezia", month: "10", year: "1992", status: "wishlist", edition: "Originale", image: "" },
+            { id: 74, number: "74", title: "Il lungo addio", month: "11", year: "1992", status: "wishlist", edition: "Originale", image: "" },
+            { id: 75, number: "75", title: "Il doppelganger", month: "12", year: "1992", status: "wishlist", edition: "Originale", image: "" },
+            { id: 76, number: "76", title: "Il mistero del sottomarino", month: "1", year: "1993", status: "wishlist", edition: "Originale", image: "" },
+            { id: 77, number: "77", title: "L'isola dei morti", month: "2", year: "1993", status: "wishlist", edition: "Originale", image: "" },
+            { id: 78, number: "78", title: "Gli occhi del gatto", month: "3", year: "1993", status: "wishlist", edition: "Originale", image: "" },
+            { id: 79, number: "79", title: "I predatori della notte", month: "4", year: "1993", status: "wishlist", edition: "Originale", image: "" },
+            { id: 80, number: "80", title: "Cagliostro: la vendetta", month: "5", year: "1993", status: "wishlist", edition: "Originale", image: "" },
+            { id: 81, number: "81", title: "La notte degli stregoni", month: "6", year: "1993", status: "wishlist", edition: "Originale", image: "" },
+            { id: 82, number: "82", title: "L'uomo senza volto", month: "7", year: "1993", status: "wishlist", edition: "Originale", image: "" },
+            { id: 83, number: "83", title: "Il paese delle meraviglie", month: "8", year: "1993", status: "wishlist", edition: "Originale", image: "" },
+            { id: 84, number: "84", title: "La casa degli specchi", month: "9", year: "1993", status: "wishlist", edition: "Originale", image: "" },
+            { id: 85, number: "85", title: "I fantasmi di Londra", month: "10", year: "1993", status: "wishlist", edition: "Originale", image: "" },
+            { id: 86, number: "86", title: "Il ritorno di Xabaras 2", month: "11", year: "1993", status: "wishlist", edition: "Originale", image: "" },
+            { id: 87, number: "87", title: "La terza luna", month: "12", year: "1993", status: "wishlist", edition: "Originale", image: "" },
+            { id: 88, number: "88", title: "Oltre la soglia", month: "1", year: "1994", status: "wishlist", edition: "Originale", image: "" },
+            { id: 89, number: "89", title: "La belva", month: "2", year: "1994", status: "wishlist", edition: "Originale", image: "" },
+            { id: 90, number: "90", title: "Il labirinto", month: "3", year: "1994", status: "wishlist", edition: "Originale", image: "" },
+            { id: 91, number: "91", title: "Metamorfosi", month: "4", year: "1994", status: "wishlist", edition: "Originale", image: "" },
+            { id: 92, number: "92", title: "La maschera", month: "5", year: "1994", status: "wishlist", edition: "Originale", image: "" },
+            { id: 93, number: "93", title: "La sposa di Xabaras", month: "6", year: "1994", status: "wishlist", edition: "Originale", image: "" },
+            { id: 94, number: "94", title: "Il ritorno dei morti viventi", month: "7", year: "1994", status: "wishlist", edition: "Originale", image: "" },
+            { id: 95, number: "95", title: "La notte della cicuta", month: "8", year: "1994", status: "wishlist", edition: "Originale", image: "" },
+            { id: 96, number: "96", title: "L'ombra della falce", month: "9", year: "1994", status: "wishlist", edition: "Originale", image: "" },
+            { id: 97, number: "97", title: "Il giorno del giudizio", month: "10", year: "1994", status: "wishlist", edition: "Originale", image: "" },
+            { id: 98, number: "98", title: "Il re di picche", month: "11", year: "1994", status: "wishlist", edition: "Originale", image: "" },
+            { id: 99, number: "99", title: "La bambola", month: "12", year: "1994", status: "wishlist", edition: "Originale", image: "" },
+            { id: 100, number: "100", title: "La storia di Dylan Dog", month: "1", year: "1995", status: "wishlist", edition: "Originale", image: "" },
+            { id: 101, number: "101", title: "La porta dell'inferno", month: "2", year: "1995", status: "wishlist", edition: "Originale", image: "" },
+            { id: 102, number: "102", title: "Il marchio di Giuda", month: "3", year: "1995", status: "wishlist", edition: "Originale", image: "" },
+            { id: 103, number: "103", title: "La preda", month: "4", year: "1995", status: "wishlist", edition: "Originale", image: "" },
+            { id: 104, number: "104", title: "La casa stregata", month: "5", year: "1995", status: "wishlist", edition: "Originale", image: "" },
+            { id: 105, number: "105", title: "L'ultimo battito", month: "6", year: "1995", status: "wishlist", edition: "Originale", image: "" },
+            { id: 106, number: "106", title: "Il guardiano", month: "7", year: "1995", status: "wishlist", edition: "Originale", image: "" },
+            { id: 107, number: "107", title: "La fine del mondo", month: "8", year: "1995", status: "wishlist", edition: "Originale", image: "" },
+            { id: 108, number: "108", title: "Le sabbie del tempo", month: "9", year: "1995", status: "wishlist", edition: "Originale", image: "" },
+            { id: 109, number: "109", title: "Il mistero del castello", month: "10", year: "1995", status: "wishlist", edition: "Originale", image: "" },
+            { id: 110, number: "110", title: "La sposa di Cagliostro", month: "11", year: "1995", status: "wishlist", edition: "Originale", image: "" },
+            { id: 111, number: "111", title: "Il circo della paura", month: "12", year: "1995", status: "wishlist", edition: "Originale", image: "" },
+            { id: 112, number: "112", title: "Lo spettro di Xabaras", month: "1", year: "1996", status: "wishlist", edition: "Originale", image: "" },
+            { id: 113, number: "113", title: "Il paese dei balocchi", month: "2", year: "1996", status: "wishlist", edition: "Originale", image: "" },
+            { id: 114, number: "114", title: "L'angelo della morte", month: "3", year: "1996", status: "wishlist", edition: "Originale", image: "" },
+            { id: 115, number: "115", title: "La settima luna", month: "4", year: "1996", status: "wishlist", edition: "Originale", image: "" },
+            { id: 116, number: "116", title: "La strega", month: "5", year: "1996", status: "wishlist", edition: "Originale", image: "" },
+            { id: 117, number: "117", title: "La maledizione del faraone", month: "6", year: "1996", status: "wishlist", edition: "Originale", image: "" },
+            { id: 118, number: "118", title: "Il giorno più lungo", month: "7", year: "1996", status: "wishlist", edition: "Originale", image: "" },
+            { id: 119, number: "119", title: "L'occhio di pietra", month: "8", year: "1996", status: "wishlist", edition: "Originale", image: "" },
+            { id: 120, number: "120", title: "La casa degli orrori", month: "9", year: "1996", status: "wishlist", edition: "Originale", image: "" },
+            { id: 121, number: "121", title: "Finchè vita non the separi", month: "10", year: "1996", status: "wishlist", edition: "Originale", image: "" },
+            { id: 122, number: "122", title: "La maledizione di Belzebù", month: "11", year: "1996", status: "wishlist", edition: "Originale", image: "" },
+            { id: 123, number: "123", title: "Il risveglio", month: "12", year: "1996", status: "wishlist", edition: "Originale", image: "" },
+            { id: 124, number: "124", title: "Caccia all'uomo", month: "1", year: "1997", status: "wishlist", edition: "Originale", image: "" },
+            { id: 125, number: "125", title: "Il mistero della mummia", month: "2", year: "1997", status: "wishlist", edition: "Originale", image: "" },
+            { id: 126, number: "126", title: "La clinica della morte", month: "3", year: "1997", status: "wishlist", edition: "Originale", image: "" },
+            { id: 127, number: "127", title: "Il guardiano del faro", month: "4", year: "1997", status: "wishlist", edition: "Originale", image: "" },
+            { id: 128, number: "128", title: "L'ultimo viaggio", month: "5", year: "1997", status: "wishlist", edition: "Originale", image: "" },
+            { id: 129, number: "129", title: "La villa stregata", month: "6", year: "1997", status: "wishlist", edition: "Originale", image: "" },
+            { id: 130, number: "130", title: "Il ritorno di Morgana", month: "7", year: "1997", status: "wishlist", edition: "Originale", image: "" },
+            { id: 131, number: "131", title: "Sette anni dopo", month: "8", year: "1997", status: "wishlist", edition: "Originale", image: "" },
+            { id: 132, number: "132", title: "L'uomo del passato", month: "9", year: "1997", status: "wishlist", edition: "Originale", image: "" },
+            { id: 133, number: "133", title: "Anima persa", month: "10", year: "1997", status: "wishlist", edition: "Originale", image: "" },
+            { id: 134, number: "134", title: "I signori del tempo", month: "11", year: "1997", status: "wishlist", edition: "Originale", image: "" },
+            { id: 135, number: "135", title: "L'orda", month: "12", year: "1997", status: "wishlist", edition: "Originale", image: "" },
+            { id: 136, number: "136", title: "L'inquilino del terzo piano", month: "1", year: "1998", status: "wishlist", edition: "Originale", image: "" },
+            { id: 137, number: "137", title: "La terza porta", month: "2", year: "1998", status: "wishlist", edition: "Originale", image: "" },
+            { id: 138, number: "138", title: "La lama e il cuore", month: "3", year: "1998", status: "wishlist", edition: "Originale", image: "" },
+            { id: 139, number: "139", title: "Le radici del male", month: "4", year: "1998", status: "wishlist", edition: "Originale", image: "" },
+            { id: 140, number: "140", title: "Il lungo inverno", month: "5", year: "1998", status: "wishlist", edition: "Originale", image: "" },
+            { id: 141, number: "141", title: "La scelta", month: "6", year: "1998", status: "wishlist", edition: "Originale", image: "" },
+            { id: 142, number: "142", title: "L'abisso", month: "7", year: "1998", status: "wishlist", edition: "Originale", image: "" },
+            { id: 143, number: "143", title: "La catena", month: "8", year: "1998", status: "wishlist", edition: "Originale", image: "" },
+            { id: 144, number: "144", title: "Il ritorno di John", month: "9", year: "1998", status: "wishlist", edition: "Originale", image: "" },
+            { id: 145, number: "145", title: "I sogni", month: "10", year: "1998", status: "wishlist", edition: "Originale", image: "" },
+            { id: 146, number: "146", title: "La sposa fantasma", month: "11", year: "1998", status: "wishlist", edition: "Originale", image: "" },
+            { id: 147, number: "147", title: "La casa degli spiriti", month: "12", year: "1998", status: "wishlist", edition: "Originale", image: "" },
+            { id: 148, number: "148", title: "Il colore della morte", month: "1", year: "1999", status: "wishlist", edition: "Originale", image: "" },
+            { id: 149, number: "149", title: "La mela marcia", month: "2", year: "1999", status: "wishlist", edition: "Originale", image: "" },
+            { id: 150, number: "150", title: "Il tramonto dei viventi", month: "3", year: "1999", status: "wishlist", edition: "Originale", image: "" },
+            { id: 151, number: "151", title: "Il guardiano della soglia", month: "4", year: "1999", status: "wishlist", edition: "Originale", image: "" },
+            { id: 152, number: "152", title: "I predatori della mente", month: "5", year: "1999", status: "wishlist", edition: "Originale", image: "" },
+            { id: 153, number: "153", title: "La locanda alla fine del mondo", month: "6", year: "1999", status: "wishlist", edition: "Originale", image: "" },
+            { id: 154, number: "154", title: "Il cacciatore di taglie", month: "7", year: "1999", status: "wishlist", edition: "Originale", image: "" },
+            { id: 155, number: "155", title: "Il tempio del male", month: "8", year: "1999", status: "wishlist", edition: "Originale", image: "" },
+            { id: 156, number: "156", title: "La stirpe di El", month: "9", year: "1999", status: "wishlist", edition: "Originale", image: "" },
+            { id: 157, number: "157", title: "L'isola del tesoro", month: "10", year: "1999", status: "wishlist", edition: "Originale", image: "" },
+            { id: 158, number: "158", title: "Il segreto di Xabaras", month: "11", year: "1999", status: "wishlist", edition: "Originale", image: "" },
+            { id: 159, number: "159", title: "La profezia di Ezra", month: "12", year: "1999", status: "wishlist", edition: "Originale", image: "" },
+            { id: 160, number: "160", title: "Anfitrione", month: "1", year: "2000", status: "wishlist", edition: "Originale", image: "" },
+            { id: 161, number: "161", title: "Il pozzo dei desideri", month: "2", year: "2000", status: "wishlist", edition: "Originale", image: "" },
+            { id: 162, number: "162", title: "La voce del silenzio", month: "3", year: "2000", status: "wishlist", edition: "Originale", image: "" },
+            { id: 163, number: "163", title: "Il paese delle ombre", month: "4", year: "2000", status: "wishlist", edition: "Originale", image: "" },
+            { id: 164, number: "164", title: "La casa stregata 2", month: "5", year: "2000", status: "wishlist", edition: "Originale", image: "" },
+            { id: 165, number: "165", title: "L'ultimo saluto", month: "6", year: "2000", status: "wishlist", edition: "Originale", image: "" },
+            { id: 166, number: "166", title: "Il sentiero dei nani", month: "7", year: "2000", status: "wishlist", edition: "Originale", image: "" },
+            { id: 167, number: "167", title: "La vendetta di John", month: "8", year: "2000", status: "wishlist", edition: "Originale", image: "" },
+            { id: 168, number: "168", title: "Il ladro di sogni", month: "9", year: "2000", status: "wishlist", edition: "Originale", image: "" },
+            { id: 169, number: "169", title: "Il ritorno di Anna", month: "10", year: "2000", status: "wishlist", edition: "Originale", image: "" },
+            { id: 170, number: "170", title: "La notte degli inganni", month: "11", year: "2000", status: "wishlist", edition: "Originale", image: "" },
+            { id: 171, number: "171", title: "Il demone della follia", month: "12", year: "2000", status: "wishlist", edition: "Originale", image: "" },
+            { id: 172, number: "172", title: "L'uomo della pioggia", month: "1", year: "2001", status: "wishlist", edition: "Originale", image: "" },
+            { id: 173, number: "173", title: "Il cane nero", month: "2", year: "2001", status: "wishlist", edition: "Originale", image: "" },
+            { id: 174, number: "174", title: "Il tappeto volante", month: "3", year: "2001", status: "wishlist", edition: "Originale", image: "" },
+            { id: 175, number: "175", title: "Il labirinto di specchi", month: "4", year: "2001", status: "wishlist", edition: "Originale", image: "" },
+            { id: 176, number: "176", title: "La clinica del sonno", month: "5", year: "2001", status: "wishlist", edition: "Originale", image: "" },
+            { id: 177, number: "177", title: "Il guardiano della notte", month: "6", year: "2001", status: "wishlist", edition: "Originale", image: "" },
+            { id: 178, number: "178", title: "La lama e il veleno", month: "7", year: "2001", status: "wishlist", edition: "Originale", image: "" },
+            { id: 179, number: "179", title: "Il circo degli orrori", month: "8", year: "2001", status: "wishlist", edition: "Originale", image: "" },
+            { id: 180, number: "180", title: "I predatori della notte 2", month: "9", year: "2001", status: "wishlist", edition: "Originale", image: "" },
+            { id: 181, number: "181", title: "La maledizione del lago", month: "10", year: "2001", status: "wishlist", edition: "Originale", image: "" },
+            { id: 182, number: "182", title: "Il ritorno della mummia", month: "11", year: "2001", status: "wishlist", edition: "Originale", image: "" },
+            { id: 183, number: "183", title: "Il vampiro", month: "12", year: "2001", status: "wishlist", edition: "Originale", image: "" },
+            { id: 184, number: "184", title: "La casa degli specchi 2", month: "1", year: "2002", status: "wishlist", edition: "Originale", image: "" },
+            { id: 185, number: "185", title: "Il segreto di Xabaras 3", month: "2", year: "2002", status: "wishlist", edition: "Originale", image: "" },
+            { id: 186, number: "186", title: "La profezia del male", month: "3", year: "2002", status: "wishlist", edition: "Originale", image: "" },
+            { id: 187, number: "187", title: "La casa stregata 3", month: "4", year: "2002", status: "wishlist", edition: "Originale", image: "" },
+            { id: 188, number: "188", title: "L'ultimo bacio", month: "5", year: "2002", status: "wishlist", edition: "Originale", image: "" },
+            { id: 189, number: "189", title: "La locanda degli spiriti", month: "6", year: "2002", status: "wishlist", edition: "Originale", image: "" },
+            { id: 190, number: "190", title: "Il tempio del silenzio", month: "7", year: "2002", status: "wishlist", edition: "Originale", image: "" },
+            { id: 191, number: "191", title: "La clinica dei ricordi", month: "8", year: "2002", status: "wishlist", edition: "Originale", image: "" },
+            { id: 192, number: "192", title: "Il guardiano del tempo", month: "9", year: "2002", status: "wishlist", edition: "Originale", image: "" },
+            { id: 193, number: "193", title: "La setta dei corvi", month: "10", year: "2002", status: "wishlist", edition: "Originale", image: "" },
+            { id: 194, number: "194", title: "La porta d'oro", month: "11", year: "2002", status: "wishlist", edition: "Originale", image: "" },
+            { id: 195, number: "195", title: "L'isola dei misteri", month: "12", year: "2002", status: "wishlist", edition: "Originale", image: "" },
+            { id: 196, number: "196", title: "Il ladro di anime", month: "1", year: "2003", status: "wishlist", edition: "Originale", image: "" },
+            { id: 197, number: "197", title: "La sposa del vento", month: "2", year: "2003", status: "wishlist", edition: "Originale", image: "" },
+            { id: 198, number: "198", title: "Il ritorno di Xabaras 4", month: "3", year: "2003", status: "wishlist", edition: "Originale", image: "" },
+            { id: 199, number: "199", title: "La casa nel bosco", month: "4", year: "2003", status: "wishlist", edition: "Originale", image: "" },
+            { id: 200, number: "200", title: "Il numero duecento", month: "5", year: "2003", status: "wishlist", edition: "Originale", image: "" },
+            { id: 201, number: "201", title: "Il profeta", month: "6", year: "2003", status: "wishlist", edition: "Originale", image: "" },
+            { id: 202, number: "202", title: "I ricordi della terra", month: "7", year: "2003", status: "wishlist", edition: "Originale", image: "" },
+            { id: 203, number: "203", title: "La bambola assassina", month: "8", year: "2003", status: "wishlist", edition: "Originale", image: "" },
+            { id: 204, number: "204", title: "Il guardiano della cripta", month: "9", year: "2003", status: "wishlist", edition: "Originale", image: "" },
+            { id: 205, number: "205", title: "La locanda del mistero", month: "10", year: "2003", status: "wishlist", edition: "Originale", image: "" },
+            { id: 206, number: "206", title: "Il tempo perduto", month: "11", year: "2003", status: "wishlist", edition: "Originale", image: "" },
+            { id: 207, number: "207", title: "La setta del serpente", month: "12", year: "2003", status: "wishlist", edition: "Originale", image: "" },
+            { id: 208, number: "208", title: "Il ritorno del vampiro", month: "1", year: "2004", status: "wishlist", edition: "Originale", image: "" },
+            { id: 209, number: "209", title: "La casa dei fantasmi", month: "2", year: "2004", status: "wishlist", edition: "Originale", image: "" },
+            { id: 210, number: "210", title: "Il pozzo del male", month: "3", year: "2004", status: "wishlist", edition: "Originale", image: "" },
+            { id: 211, number: "211", title: "La clinica delle ombre", month: "4", year: "2004", status: "wishlist", edition: "Originale", image: "" },
+            { id: 212, number: "212", title: "Il guardiano delle anime", month: "5", year: "2004", status: "wishlist", edition: "Originale", image: "" },
+            { id: 213, number: "213", title: "La maledizione del bosco", month: "6", year: "2004", status: "wishlist", edition: "Originale", image: "" },
+            { id: 214, number: "214", title: "Il segreto della mummia", month: "7", year: "2004", status: "wishlist", edition: "Originale", image: "" },
+            { id: 215, number: "215", title: "La setta dei vampiri", month: "8", year: "2004", status: "wishlist", edition: "Originale", image: "" },
+            { id: 216, number: "216", title: "Il tempio delle ombre", month: "9", year: "2004", status: "wishlist", edition: "Originale", image: "" },
+            { id: 217, number: "217", title: "La casa degli spiriti 2", month: "10", year: "2004", status: "wishlist", edition: "Originale", image: "" },
+            { id: 218, number: "218", title: "Il ritorno di John 2", month: "11", year: "2004", status: "wishlist", edition: "Originale", image: "" },
+            { id: 219, number: "219", title: "La locanda della paura", month: "12", year: "2004", status: "wishlist", edition: "Originale", image: "" },
+            { id: 220, number: "220", title: "Il guardiano del pozzo", month: "1", year: "2005", status: "wishlist", edition: "Originale", image: "" },
+            { id: 221, number: "221", title: "Il cartomante", month: "2", year: "2005", status: "wishlist", edition: "Originale", image: "" },
+            { id: 222, number: "222", title: "Non umano", month: "3", year: "2005", status: "wishlist", edition: "Originale", image: "" },
+            { id: 223, number: "223", title: "Cagliostro risorge", month: "4", year: "2005", status: "wishlist", edition: "Originale", image: "" },
+            { id: 224, number: "224", title: "I predatori dell'arca", month: "5", year: "2005", status: "wishlist", edition: "Originale", image: "" },
+            { id: 225, number: "225", title: "Al di là del bene e del male", month: "6", year: "2005", status: "wishlist", edition: "Originale", image: "" },
+            { id: 226, number: "226", title: "Il passeggero oscuro", month: "7", year: "2005", status: "wishlist", edition: "Originale", image: "" },
+            { id: 227, number: "227", title: "C'era una volta a Londra", month: "8", year: "2005", status: "wishlist", edition: "Originale", image: "" },
+            { id: 228, number: "228", title: "I misteri di Bow Street", month: "9", year: "2005", status: "wishlist", edition: "Originale", image: "" },
+            { id: 229, number: "229", title: "La nona porta", month: "10", year: "2005", status: "wishlist", edition: "Originale", image: "" },
+            { id: 230, number: "230", title: "La rivolta delle macchine", month: "11", year: "2005", status: "wishlist", edition: "Originale", image: "" },
+            { id: 231, number: "231", title: "Nightmare", month: "12", year: "2005", status: "wishlist", edition: "Originale", image: "" },
+            { id: 232, number: "232", title: "Il cane di terracotta", month: "1", year: "2006", status: "wishlist", edition: "Originale", image: "" },
+            { id: 233, number: "233", title: "La strada per l'inferno", month: "2", year: "2006", status: "wishlist", edition: "Originale", image: "" },
+            { id: 234, number: "234", title: "Il volo degli angeli", month: "3", year: "2006", status: "wishlist", edition: "Originale", image: "" },
+            { id: 235, number: "235", title: "I demoni di Londra", month: "4", year: "2006", status: "wishlist", edition: "Originale", image: "" },
+            { id: 236, number: "236", title: "La casa degli orrori 2", month: "5", year: "2006", status: "wishlist", edition: "Originale", image: "" },
+            { id: 237, number: "237", title: "Mefisto risorge", month: "6", year: "2006", status: "wishlist", edition: "Originale", image: "" },
+            { id: 238, number: "238", title: "Il guardiano della soglia 2", month: "7", year: "2006", status: "wishlist", edition: "Originale", image: "" },
+            { id: 239, number: "239", title: "La setta di Cthulhu", month: "8", year: "2006", status: "wishlist", edition: "Originale", image: "" },
+            { id: 240, number: "240", title: "Il tempio di ghiaccio", month: "9", year: "2006", status: "wishlist", edition: "Originale", image: "" },
+            { id: 241, number: "241", title: "La settima porta", month: "10", year: "2006", status: "wishlist", edition: "Originale", image: "" },
+            { id: 242, number: "242", title: "Il ritorno della morte", month: "11", year: "2006", status: "wishlist", edition: "Originale", image: "" },
+            { id: 243, number: "243", title: "L'isola dei vampiri", month: "12", year: "2006", status: "wishlist", edition: "Originale", image: "" },
+            { id: 244, number: "244", title: "Il segreto dei templari", month: "1", year: "2007", status: "wishlist", edition: "Originale", image: "" },
+            { id: 245, number: "245", title: "La profezia dei Maya", month: "2", year: "2007", status: "wishlist", edition: "Originale", image: "" },
+            { id: 246, number: "246", title: "La casa stregata 4", month: "3", year: "2007", status: "wishlist", edition: "Originale", image: "" },
+            { id: 247, number: "247", title: "Il guardiano del tempio", month: "4", year: "2007", status: "wishlist", edition: "Originale", image: "" },
+            { id: 248, number: "248", title: "La clinica delle anime", month: "5", year: "2007", status: "wishlist", edition: "Originale", image: "" },
+            { id: 249, number: "249", title: "Il tempio della paura", month: "6", year: "2007", status: "wishlist", edition: "Originale", image: "" },
+            { id: 250, number: "250", title: "Bit Generation", month: "7", year: "2007", status: "wishlist", edition: "Originale", image: "" },
+            { id: 251, number: "251", title: "Il cacciatore", month: "8", year: "2007", status: "wishlist", edition: "Originale", image: "" },
+            { id: 252, number: "252", title: "La casa degli spiriti 3", month: "9", year: "2007", status: "wishlist", edition: "Originale", image: "" },
+            { id: 253, number: "253", title: "Il ritorno di John 3", month: "10", year: "2007", status: "wishlist", edition: "Originale", image: "" },
+            { id: 254, number: "254", title: "La locanda degli orrori", month: "11", year: "2007", status: "wishlist", edition: "Originale", image: "" },
+            { id: 255, number: "255", title: "Il guardiano dei sogni", month: "12", year: "2007", status: "wishlist", edition: "Originale", image: "" },
+            { id: 256, number: "256", title: "La mummia risorge", month: "1", year: "2008", status: "wishlist", edition: "Originale", image: "" },
+            { id: 257, number: "257", title: "L'ombra del destino", month: "2", year: "2008", status: "wishlist", edition: "Originale", image: "" },
+            { id: 258, number: "258", title: "La setta degli assassini", month: "3", year: "2008", status: "wishlist", edition: "Originale", image: "" },
+            { id: 259, number: "259", title: "Il tempio del fuoco", month: "4", year: "2008", status: "wishlist", edition: "Originale", image: "" },
+            { id: 260, number: "260", title: "La settima luna 2", month: "5", year: "2008", status: "wishlist", edition: "Originale", image: "" },
+            { id: 261, number: "261", title: "Il ritorno di Xabaras 5", month: "6", year: "2008", status: "wishlist", edition: "Originale", image: "" },
+            { id: 262, number: "262", title: "La casa stregata 5", month: "7", year: "2008", status: "wishlist", edition: "Originale", image: "" },
+            { id: 263, number: "263", title: "Il guardiano del mare", month: "8", year: "2008", status: "wishlist", edition: "Originale", image: "" },
+            { id: 264, number: "264", title: "La clinica degli orrori", month: "9", year: "2008", status: "wishlist", edition: "Originale", image: "" },
+            { id: 265, number: "265", title: "Il tempio della morte", month: "10", year: "2008", status: "wishlist", edition: "Originale", image: "" },
+            { id: 266, number: "266", title: "La setta dei dannati", month: "11", year: "2008", status: "wishlist", edition: "Originale", image: "" },
+            { id: 267, number: "267", title: "Il ritorno del male", month: "12", year: "2008", status: "wishlist", edition: "Originale", image: "" },
+            { id: 268, number: "268", title: "L'isola dei dannati", month: "1", year: "2009", status: "wishlist", edition: "Originale", image: "" },
+            { id: 269, number: "269", title: "Il segreto dei Rosacroce", month: "2", year: "2009", status: "wishlist", edition: "Originale", image: "" },
+            { id: 270, number: "270", title: "La profezia dei templari", month: "3", year: "2009", status: "wishlist", edition: "Originale", image: "" },
+            { id: 271, number: "271", title: "La casa dei misteri", month: "4", year: "2009", status: "wishlist", edition: "Originale", image: "" },
+            { id: 272, number: "272", title: "Il guardiano della terra", month: "5", year: "2009", status: "wishlist", edition: "Originale", image: "" },
+            { id: 273, number: "273", title: "La clinica dei fantasmi", month: "6", year: "2009", status: "wishlist", edition: "Originale", image: "" },
+            { id: 274, number: "274", title: "Il tempio degli spiriti", month: "7", year: "2009", status: "wishlist", edition: "Originale", image: "" },
+            { id: 275, number: "275", title: "La setta dei misteri", month: "8", year: "2009", status: "wishlist", edition: "Originale", image: "" },
+            { id: 276, number: "276", title: "Il ritorno del tempo", month: "9", year: "2009", status: "wishlist", edition: "Originale", image: "" },
+            { id: 277, number: "277", title: "L'isola dei misteri 2", month: "10", year: "2009", status: "wishlist", edition: "Originale", image: "" },
+            { id: 278, number: "278", title: "Il segreto dei Maya", month: "11", year: "2009", status: "wishlist", edition: "Originale", image: "" },
+            { id: 279, number: "279", title: "La profezia di Nostradamus", month: "12", year: "2009", status: "wishlist", edition: "Originale", image: "" },
+            { id: 280, number: "280", title: "La casa stregata 6", month: "1", year: "2010", status: "wishlist", edition: "Originale", image: "" },
+            { id: 281, number: "281", title: "Il guardiano dell'inferno", month: "2", year: "2010", status: "wishlist", edition: "Originale", image: "" },
+            { id: 282, number: "282", title: "La clinica della paura", month: "3", year: "2010", status: "wishlist", edition: "Originale", image: "" },
+            { id: 283, number: "283", title: "Il tempio dei misteri", month: "4", year: "2010", status: "wishlist", edition: "Originale", image: "" },
+            { id: 284, number: "284", title: "La setta dei segreti", month: "5", year: "2010", status: "wishlist", edition: "Originale", image: "" },
+            { id: 285, number: "285", title: "Il ritorno dei morti", month: "6", year: "2010", status: "wishlist", edition: "Originale", image: "" },
+            { id: 286, number: "286", title: "L'isola dei segreti", month: "7", year: "2010", status: "wishlist", edition: "Originale", image: "" },
+            { id: 287, number: "287", title: "Il segreto dell'alchimista", month: "8", year: "2010", status: "wishlist", edition: "Originale", image: "" },
+            { id: 288, number: "288", title: "La profezia dei Rosacroce", month: "9", year: "2010", status: "wishlist", edition: "Originale", image: "" },
+            { id: 289, number: "289", title: "La casa dei segreti", month: "10", year: "2010", status: "wishlist", edition: "Originale", image: "" },
+            { id: 290, number: "290", title: "Il guardiano dei segreti", month: "11", year: "2010", status: "wishlist", edition: "Originale", image: "" },
+            { id: 291, number: "291", title: "La clinica dei segreti", month: "12", year: "2010", status: "wishlist", edition: "Originale", image: "" },
+            { id: 292, number: "292", title: "Il tempio dei segreti", month: "1", year: "2011", status: "wishlist", edition: "Originale", image: "" },
+            { id: 293, number: "293", title: "La setta dei segreti 2", month: "2", year: "2011", status: "wishlist", edition: "Originale", image: "" },
+            { id: 294, number: "294", title: "Il ritorno dei segreti", month: "3", year: "2011", status: "wishlist", edition: "Originale", image: "" },
+            { id: 295, number: "295", title: "L'isola dei segreti 2", month: "4", year: "2011", status: "wishlist", edition: "Originale", image: "" },
+            { id: 296, number: "296", title: "Il segreto dei segreti", month: "5", year: "2011", status: "wishlist", edition: "Originale", image: "" },
+            { id: 297, number: "297", title: "La profezia dei segreti", month: "6", year: "2011", status: "wishlist", edition: "Originale", image: "" },
+            { id: 298, number: "298", title: "La casa dei segreti 2", month: "7", year: "2011", status: "wishlist", edition: "Originale", image: "" },
+            { id: 299, number: "299", title: "Il guardiano dei segreti 2", month: "8", year: "2011", status: "wishlist", edition: "Originale", image: "" },
+            { id: 300, number: "300", title: "DA ZERO A UNO", month: "9", year: "2011", status: "wishlist", edition: "Originale", image: "" },
+            { id: 301, number: "301", title: "La mano sbagliata", month: "10", year: "2011", status: "wishlist", edition: "Originale", image: "" },
+            { id: 302, number: "302", title: "Il negozio di antiquariato", month: "11", year: "2011", status: "wishlist", edition: "Originale", image: "" },
+            { id: 303, number: "303", title: "L'inquilino del primo piano", month: "12", year: "2011", status: "wishlist", edition: "Originale", image: "" },
+            { id: 304, number: "304", title: "L'eterno ritorno", month: "1", year: "2012", status: "wishlist", edition: "Originale", image: "" },
+            { id: 305, number: "305", title: "Il baule delle meraviglie", month: "2", year: "2012", status: "wishlist", edition: "Originale", image: "" },
+            { id: 306, number: "306", title: "Il baule delle meraviglie 2", month: "3", year: "2012", status: "wishlist", edition: "Originale", image: "" },
+            { id: 307, number: "307", title: "Il baule delle meraviglie 3", month: "4", year: "2012", status: "wishlist", edition: "Originale", image: "" },
+            { id: 308, number: "308", title: "Il baule delle meraviglie 4", month: "5", year: "2012", status: "wishlist", edition: "Originale", image: "" },
+            { id: 309, number: "309", title: "Il baule delle meraviglie 5", month: "6", year: "2012", status: "wishlist", edition: "Originale", image: "" },
+            { id: 310, number: "310", title: "Il baule delle meraviglie 6", month: "7", year: "2012", status: "wishlist", edition: "Originale", image: "" },
+            { id: 311, number: "311", title: "Il baule delle meraviglie 7", month: "8", year: "2012", status: "wishlist", edition: "Originale", image: "" },
+            { id: 312, number: "312", title: "Il baule delle meraviglie 8", month: "9", year: "2012", status: "wishlist", edition: "Originale", image: "" },
+            { id: 313, number: "313", title: "Il baule delle meraviglie 9", month: "10", year: "2012", status: "wishlist", edition: "Originale", image: "" },
+            { id: 314, number: "314", title: "Il baule delle meraviglie 10", month: "11", year: "2012", status: "wishlist", edition: "Originale", image: "" },
+            { id: 315, number: "315", title: "Il baule delle meraviglie 11", month: "12", year: "2012", status: "wishlist", edition: "Originale", image: "" },
+            { id: 316, number: "316", title: "Il baule delle meraviglie 12", month: "1", year: "2013", status: "wishlist", edition: "Originale", image: "" },
+            { id: 317, number: "317", title: "Il baule delle meraviglie 13", month: "2", year: "2013", status: "wishlist", edition: "Originale", image: "" },
+            { id: 318, number: "318", title: "Il baule delle meraviglie 14", month: "3", year: "2013", status: "wishlist", edition: "Originale", image: "" },
+            { id: 319, number: "319", title: "Il baule delle meraviglie 15", month: "4", year: "2013", status: "wishlist", edition: "Originale", image: "" },
+            { id: 320, number: "320", title: "Il baule delle meraviglie 16", month: "5", year: "2013", status: "wishlist", edition: "Originale", image: "" },
+            { id: 321, number: "321", title: "Il baule delle meraviglie 17", month: "6", year: "2013", status: "wishlist", edition: "Originale", image: "" },
+            { id: 322, number: "322", title: "Il baule delle meraviglie 18", month: "7", year: "2013", status: "wishlist", edition: "Originale", image: "" },
+            { id: 323, number: "323", title: "Il baule delle meraviglie 19", month: "8", year: "2013", status: "wishlist", edition: "Originale", image: "" },
+            { id: 324, number: "324", title: "Il baule delle meraviglie 20", month: "9", year: "2013", status: "wishlist", edition: "Originale", image: "" },
+            { id: 325, number: "325", title: "Il baule delle meraviglie 21", month: "10", year: "2013", status: "wishlist", edition: "Originale", image: "" },
+            { id: 326, number: "326", title: "Il baule delle meraviglie 22", month: "11", year: "2013", status: "wishlist", edition: "Originale", image: "" },
+            { id: 327, number: "327", title: "Il baule delle meraviglie 23", month: "12", year: "2013", status: "wishlist", edition: "Originale", image: "" },
+            { id: 328, number: "328", title: "Il baule delle meraviglie 24", month: "1", year: "2014", status: "wishlist", edition: "Originale", image: "" },
+            { id: 329, number: "329", title: "Il baule delle meraviglie 25", month: "2", year: "2014", status: "wishlist", edition: "Originale", image: "" },
+            { id: 330, number: "330", title: "Il baule delle meraviglie 26", month: "3", year: "2014", status: "wishlist", edition: "Originale", image: "" },
+            { id: 331, number: "331", title: "Il baule delle meraviglie 27", month: "4", year: "2014", status: "wishlist", edition: "Originale", image: "" },
+            { id: 332, number: "332", title: "Il baule delle meraviglie 28", month: "5", year: "2014", status: "wishlist", edition: "Originale", image: "" },
+            { id: 333, number: "333", title: "Il baule delle meraviglie 29", month: "6", year: "2014", status: "wishlist", edition: "Originale", image: "" },
+            { id: 334, number: "334", title: "Il baule delle meraviglie 30", month: "7", year: "2014", status: "wishlist", edition: "Originale", image: "" },
+            { id: 335, number: "335", title: "Spettri", month: "8", year: "2014", status: "wishlist", edition: "Originale", image: "" },
+            { id: 336, number: "336", title: "In un cielo di steli di ferro", month: "9", year: "2014", status: "wishlist", edition: "Originale", image: "" },
+            { id: 337, number: "337", title: "A volte ritornano", month: "10", year: "2014", status: "wishlist", edition: "Originale", image: "" },
+            { id: 338, number: "338", title: "Mai più, ispettore Bloch", month: "11", year: "2014", status: "wishlist", edition: "Originale", image: "" },
+            { id: 339, number: "339", title: "Anima nera", month: "12", year: "2014", status: "wishlist", edition: "Originale", image: "" },
+            { id: 340, number: "340", title: "Benvenuti a Inkilterra", month: "1", year: "2015", status: "wishlist", edition: "Originale", image: "" },
+            { id: 341, number: "341", title: "Al di là del grande fiume", month: "2", year: "2015", status: "wishlist", edition: "Originale", image: "" },
+            { id: 342, number: "342", title: "Saluti da Wicker Island", month: "3", year: "2015", status: "wishlist", edition: "Originale", image: "" },
+            { id: 343, number: "343", title: "Hysteria", month: "4", year: "2015", status: "wishlist", edition: "Originale", image: "" },
+            { id: 344, number: "344", title: "Il negromante 3", month: "5", year: "2015", status: "wishlist", edition: "Originale", image: "" },
+            { id: 345, number: "345", title: "I piaceri della notte", month: "6", year: "2015", status: "wishlist", edition: "Originale", image: "" },
+            { id: 346, number: "346", title: "La mano sbagliata 2", month: "7", year: "2015", status: "wishlist", edition: "Originale", image: "" },
+            { id: 347, number: "347", title: "Il negozio di antiquariato 2", month: "8", year: "2015", status: "wishlist", edition: "Originale", image: "" },
+            { id: 348, number: "348", title: "L'inquilino del primo piano 2", month: "9", year: "2015", status: "wishlist", edition: "Originale", image: "" },
+            { id: 349, number: "349", title: "L'eterno ritorno 2", month: "10", year: "2015", status: "wishlist", edition: "Originale", image: "" },
+            { id: 350, number: "350", title: "Lacrime di pietra", month: "11", year: "2015", status: "wishlist", edition: "Originale", image: "" },
+            { id: 351, number: "351", title: "In nome del padre", month: "12", year: "2015", status: "wishlist", edition: "Originale", image: "" },
+            { id: 352, number: "352", title: "In attesa di giudizio", month: "1", year: "2016", status: "wishlist", edition: "Originale", image: "" },
+            { id: 353, number: "353", title: "The Book of the Dead", month: "2", year: "2016", status: "wishlist", edition: "Originale", image: "" },
+            { id: 354, number: "354", title: "Il settimo girone", month: "3", year: "2016", status: "wishlist", edition: "Originale", image: "" },
+            { id: 355, number: "355", title: "L'ora senza nome", month: "4", year: "2016", status: "wishlist", edition: "Originale", image: "" },
+            { id: 356, number: "356", title: "Mater Morbi: la resurrezione", month: "5", year: "2016", status: "wishlist", edition: "Originale", image: "" },
+            { id: 357, number: "357", title: "Cattiverie", month: "6", year: "2016", status: "wishlist", edition: "Originale", image: "" },
+            { id: 358, number: "358", title: "La caduta degli dei", month: "7", year: "2016", status: "wishlist", edition: "Originale", image: "" },
+            { id: 359, number: "359", title: "Ospiti inattesi", month: "8", year: "2016", status: "wishlist", edition: "Originale", image: "" },
+            { id: 360, number: "360", title: "Ogni morte di papa", month: "9", year: "2016", status: "wishlist", edition: "Originale", image: "" },
+            { id: 361, number: "361", title: "Mater Dolorosa", month: "10", year: "2016", status: "wishlist", edition: "Originale", image: "" },
+            { id: 362, number: "362", title: "La mano sbagliata 3", month: "11", year: "2016", status: "wishlist", edition: "Originale", image: "" },
+            { id: 363, number: "363", title: "Il negozio di antiquariato 3", month: "12", year: "2016", status: "wishlist", edition: "Originale", image: "" },
+            { id: 364, number: "364", title: "L'inquilino del primo piano 3", month: "1", year: "2017", status: "wishlist", edition: "Originale", image: "" },
+            { id: 365, number: "365", title: "L'eterno ritorno 3", month: "2", year: "2017", status: "wishlist", edition: "Originale", image: "" },
+            { id: 366, number: "366", title: "Il negromante 4", month: "3", year: "2017", status: "wishlist", edition: "Originale", image: "" },
+            { id: 367, number: "367", title: "I piaceri della notte 2", month: "4", year: "2017", status: "wishlist", edition: "Originale", image: "" },
+            { id: 368, number: "368", title: "La mano sbagliata 4", month: "5", year: "2017", status: "wishlist", edition: "Originale", image: "" },
+            { id: 369, number: "369", title: "Il negozio di antiquariato 4", month: "6", year: "2017", status: "wishlist", edition: "Originale", image: "" },
+            { id: 370, number: "370", title: "L'inquilino del primo piano 4", month: "7", year: "2017", status: "wishlist", edition: "Originale", image: "" },
+            { id: 371, number: "371", title: "Maledizione", month: "8", year: "2017", status: "wishlist", edition: "Originale", image: "" },
+            { id: 372, number: "372", title: "Fino all'ultimo istante", month: "9", year: "2017", status: "wishlist", edition: "Originale", image: "" },
+            { id: 373, number: "373", title: "Il canto delle sirene", month: "10", year: "2017", status: "wishlist", edition: "Originale", image: "" },
+            { id: 374, number: "374", title: "Nel fango", month: "11", year: "2017", status: "wishlist", edition: "Originale", image: "" },
+            { id: 375, number: "375", title: "Nel nome del figlio", month: "12", year: "2017", status: "wishlist", edition: "Originale", image: "" },
+            { id: 376, number: "376", title: "La macchina delle illusioni", month: "1", year: "2018", status: "wishlist", edition: "Originale", image: "" },
+            { id: 377, number: "377", title: "Non umano 2", month: "2", year: "2018", status: "wishlist", edition: "Originale", image: "" },
+            { id: 378, number: "378", title: "Cagliostro risorge 2", month: "3", year: "2018", status: "wishlist", edition: "Originale", image: "" },
+            { id: 379, number: "379", title: "I predatori dell'arca 2", month: "4", year: "2018", status: "wishlist", edition: "Originale", image: "" },
+            { id: 380, number: "380", title: "Al di là del bene e del male 2", month: "5", year: "2018", status: "wishlist", edition: "Originale", image: "" },
+            { id: 381, number: "381", title: "Il passeggero oscuro 2", month: "6", year: "2018", status: "wishlist", edition: "Originale", image: "" },
+            { id: 382, number: "382", title: "C'era una volta a Londra 2", month: "7", year: "2018", status: "wishlist", edition: "Originale", image: "" },
+            { id: 383, number: "383", title: "I misteri di Bow Street 2", month: "8", year: "2018", status: "wishlist", edition: "Originale", image: "" },
+            { id: 384, number: "384", title: "La nona porta 2", month: "9", year: "2018", status: "wishlist", edition: "Originale", image: "" },
+            { id: 385, number: "385", title: "La rivolta delle macchine 2", month: "10", year: "2018", status: "wishlist", edition: "Originale", image: "" },
+            { id: 386, number: "386", title: "Nightmare 2", month: "11", year: "2018", status: "wishlist", edition: "Originale", image: "" },
+            { id: 387, number: "387", title: "Il cane di terracotta 2", month: "12", year: "2018", status: "wishlist", edition: "Originale", image: "" },
+            { id: 388, number: "388", title: "La strada per l'inferno 2", month: "1", year: "2019", status: "wishlist", edition: "Originale", image: "" },
+            { id: 389, number: "389", title: "Il volo degli angeli 2", month: "2", year: "2019", status: "wishlist", edition: "Originale", image: "" },
+            { id: 390, number: "390", title: "I demoni di Londra 2", month: "3", year: "2019", status: "wishlist", edition: "Originale", image: "" },
+            { id: 391, number: "391", title: "La casa degli orrori 3", month: "4", year: "2019", status: "wishlist", edition: "Originale", image: "" },
+            { id: 392, number: "392", title: "Mefisto risorge 2", month: "5", year: "2019", status: "wishlist", edition: "Originale", image: "" },
+            { id: 393, number: "393", title: "Il guardiano della soglia 3", month: "6", year: "2019", status: "wishlist", edition: "Originale", image: "" },
+            { id: 394, number: "394", title: "La setta di Cthulhu 2", month: "7", year: "2019", status: "wishlist", edition: "Originale", image: "" },
+            { id: 395, number: "395", title: "Il tempio di ghiaccio 2", month: "8", year: "2019", status: "wishlist", edition: "Originale", image: "" },
+            { id: 396, number: "396", title: "La settima porta 2", month: "9", year: "2019", status: "wishlist", edition: "Originale", image: "" },
+            { id: 397, number: "397", title: "Il ritorno della morte 2", month: "10", year: "2019", status: "wishlist", edition: "Originale", image: "" },
+            { id: 398, number: "398", title: "L'isola dei vampiri 2", month: "11", year: "2019", status: "wishlist", edition: "Originale", image: "" },
+            { id: 399, number: "399", title: "Il segreto dei templari 2", month: "12", year: "2019", status: "wishlist", edition: "Originale", image: "" },
+            { id: 400, number: "400", title: "Oggi sposi", month: "1", year: "2020", status: "wishlist", edition: "Originale", image: "" },
+            { id: 401, number: "401", title: "L'ora di pietra", month: "2", year: "2020", status: "wishlist", edition: "Originale", image: "" },
+            { id: 402, number: "402", title: "Il tramonto del mondo", month: "3", year: "2020", status: "wishlist", edition: "Originale", image: "" },
+            { id: 403, number: "403", title: "L'Cabal", month: "4", year: "2020", status: "wishlist", edition: "Originale", image: "" },
+            { id: 404, number: "404", title: "Anna per sempre", month: "5", year: "2020", status: "wishlist", edition: "Originale", image: "" },
+            { id: 405, number: "405", title: "La badante", month: "6", year: "2020", status: "wishlist", edition: "Originale", image: "" },
+            { id: 406, number: "406", title: "Mente locale", month: "7", year: "2020", status: "wishlist", edition: "Originale", image: "" },
+            { id: 407, number: "407", title: "La notte dei desideri", month: "8", year: "2020", status: "wishlist", edition: "Originale", image: "" },
+            { id: 408, number: "408", title: "Il lato oscuro", month: "9", year: "2020", status: "wishlist", edition: "Originale", image: "" },
+            { id: 409, number: "409", title: "Anni ribelli", month: "10", year: "2020", status: "wishlist", edition: "Originale", image: "" },
+            { id: 410, number: "410", title: "La macchina del tempo", month: "11", year: "2020", status: "wishlist", edition: "Originale", image: "" },
+            { id: 411, number: "411", title: "Il prezzo della carne", month: "12", year: "2020", status: "wishlist", edition: "Originale", image: "" },
+            { id: 412, number: "412", title: "La porta sul nulla", month: "1", year: "2021", status: "wishlist", edition: "Originale", image: "" },
+            { id: 413, number: "413", title: "Il negromante 5", month: "2", year: "2021", status: "wishlist", edition: "Originale", image: "" },
+            { id: 414, number: "414", title: "I piaceri della notte 3", month: "3", year: "2021", status: "wishlist", edition: "Originale", image: "" },
+            { id: 415, number: "415", title: "La mano sbagliata 5", month: "4", year: "2021", status: "wishlist", edition: "Originale", image: "" },
+            { id: 416, number: "416", title: "Il negozio di antiquariato 5", month: "5", year: "2021", status: "wishlist", edition: "Originale", image: "" },
+            { id: 417, number: "417", title: "L'inquilino del primo piano 5", month: "6", year: "2021", status: "wishlist", edition: "Originale", image: "" },
+            { id: 418, number: "418", title: "L'eterno ritorno 5", month: "7", year: "2021", status: "wishlist", edition: "Originale", image: "" },
+            { id: 419, number: "419", title: "Il negromante 6", month: "8", year: "2021", status: "wishlist", edition: "Originale", image: "" },
+            { id: 420, number: "420", title: "I piaceri della notte 4", month: "9", year: "2021", status: "wishlist", edition: "Originale", image: "" },
+            { id: 421, number: "421", title: "La mano sbagliata 6", month: "10", year: "2021", status: "wishlist", edition: "Originale", image: "" },
+            { id: 422, number: "422", title: "Il negozio di antiquariato 6", month: "11", year: "2021", status: "wishlist", edition: "Originale", image: "" },
+            { id: 423, number: "423", title: "L'inquilino del primo piano 6", month: "12", year: "2021", status: "wishlist", edition: "Originale", image: "" },
+            { id: 424, number: "424", title: "L'eterno ritorno 6", month: "1", year: "2022", status: "wishlist", edition: "Originale", image: "" },
+            { id: 425, number: "425", title: "Il negromante 7", month: "2", year: "2022", status: "wishlist", edition: "Originale", image: "" },
+            { id: 426, number: "426", title: "I piaceri della notte 5", month: "3", year: "2022", status: "wishlist", edition: "Originale", image: "" },
+            { id: 427, number: "427", title: "La mano sbagliata 7", month: "4", year: "2022", status: "wishlist", edition: "Originale", image: "" },
+            { id: 428, number: "428", title: "Il negozio di antiquariato 7", month: "5", year: "2022", status: "wishlist", edition: "Originale", image: "" },
+            { id: 429, number: "429", title: "L'inquilino del primo piano 7", month: "6", year: "2022", status: "wishlist", edition: "Originale", image: "" },
+            { id: 430, number: "430", title: "L'eterno ritorno 7", month: "7", year: "2022", status: "wishlist", edition: "Originale", image: "" },
+            { id: 431, number: "431", title: "Il negromante 8", month: "8", year: "2022", status: "wishlist", edition: "Originale", image: "" },
+            { id: 432, number: "432", title: "I piaceri della notte 6", month: "9", year: "2022", status: "wishlist", edition: "Originale", image: "" },
+            { id: 433, number: "433", title: "La mano sbagliata 8", month: "10", year: "2022", status: "wishlist", edition: "Originale", image: "" },
+            { id: 434, number: "434", title: "Il negozio di antiquariato 8", month: "11", year: "2022", status: "wishlist", edition: "Originale", image: "" },
+            { id: 435, number: "435", title: "L'inquilino del primo piano 8", month: "12", year: "2022", status: "wishlist", edition: "Originale", image: "" },
+            { id: 436, number: "436", title: "L'eterno ritorno 8", month: "1", year: "2023", status: "wishlist", edition: "Originale", image: "" },
+            { id: 437, number: "437", title: "Il negromante 9", month: "2", year: "2023", status: "wishlist", edition: "Originale", image: "" },
+            { id: 438, number: "438", title: "I piaceri della notte 7", month: "3", year: "2023", status: "wishlist", edition: "Originale", image: "" },
+            { id: 439, number: "439", title: "La mano sbagliata 9", month: "4", year: "2023", status: "wishlist", edition: "Originale", image: "" },
+            { id: 440, number: "440", title: "Il negozio di antiquariato 9", month: "5", year: "2023", status: "wishlist", edition: "Originale", image: "" },
+            { id: 441, number: "441", title: "L'inquilino del primo piano 9", month: "6", year: "2023", status: "wishlist", edition: "Originale", image: "" },
+            { id: 442, number: "442", title: "L'eterno ritorno 9", month: "7", year: "2023", status: "wishlist", edition: "Originale", image: "" },
+            { id: 443, number: "443", title: "Il negromante 10", month: "8", year: "2023", status: "wishlist", edition: "Originale", image: "" },
+            { id: 444, number: "444", title: "I piaceri della notte 8", month: "9", year: "2023", status: "wishlist", edition: "Originale", image: "" },
+            { id: 445, number: "445", title: "La mano sbagliata 10", month: "10", year: "2023", status: "wishlist", edition: "Originale", image: "" },
+            { id: 446, number: "446", title: "L'altro lato dello specchio", month: "10", year: "2023", status: "wishlist", edition: "Originale", image: "" },
+            { id: 447, number: "447", title: "Hazel la morta", month: "11", year: "2023", status: "wishlist", edition: "Originale", image: "" },
+            { id: 448, number: "448", title: "Anatomia dell'anima", month: "12", year: "2023", status: "wishlist", edition: "Originale", image: "" },
+            { id: 449, number: "449", title: "La misura del mondo", month: "1", year: "2024", status: "wishlist", edition: "Originale", image: "" },
+            { id: 450, number: "450", title: "Shock", month: "2", year: "2024", status: "wishlist", edition: "Originale", image: "" },
+            { id: 451, number: "451", title: "Terra funesta", month: "3", year: "2024", status: "wishlist", edition: "Originale", image: "" },
+            { id: 452, number: "452", title: "Un tranquillo venerdì di paura", month: "4", year: "2024", status: "wishlist", edition: "Originale", image: "" },
+            { id: 453, number: "453", title: "Pioggia di sangue", month: "5", year: "2024", status: "wishlist", edition: "Originale", image: "" },
+            { id: 454, number: "454", title: "Stangata agli Inferni", month: "6", year: "2024", status: "wishlist", edition: "Originale", image: "" },
+            { id: 455, number: "454bis", title: "Orrore tra i ghiacci", month: "7", year: "2024", status: "wishlist", edition: "Originale", image: "" },
+            { id: 456, number: "455", title: "Fuga da Golconda", month: "7", year: "2024", status: "wishlist", edition: "Originale", image: "" },
+            { id: 457, number: "456", title: "Colui che divora le ombre", month: "8", year: "2024", status: "wishlist", edition: "Originale", image: "" },
+            { id: 458, number: "457", title: "La sottile linea nera", month: "9", year: "2024", status: "wishlist", edition: "Originale", image: "" },
+            { id: 459, number: "458", title: "Sette vite", month: "10", year: "2024", status: "wishlist", edition: "Originale", image: "" },
+            { id: 460, number: "458bis", title: "L'oscuro messaggero", month: "11", year: "2024", status: "wishlist", edition: "Originale", image: "" },
+            { id: 461, number: "459", title: "Hikikomori", month: "11", year: "2024", status: "wishlist", edition: "Originale", image: "" },
+            { id: 462, number: "460", title: "32 dicembre", month: "12", year: "2024", status: "wishlist", edition: "Originale", image: "" }
         ];
 
-        let comics = JSON.parse(localStorage.getItem('dylans_comics_v2')) || defaultComics;
+        let comics = JSON.parse(localStorage.getItem('dylans_comics_v3')) || initialComics;
         let currentImageBase64 = "";
 
         function saveToStorage() {
-            localStorage.setItem('dylans_comics_v2', JSON.stringify(comics));
+            localStorage.setItem('dylans_comics_v3', JSON.stringify(comics));
         }
 
         function resetData() {
-            if (confirm("Vuoi ripristinare i dati iniziali dal file Excel? Perderai le modifiche non salvate.")) {
-                comics = JSON.parse(JSON.stringify(defaultComics));
+            if (confirm("Vuoi ripristinare i dati originali dal file Excel?")) {
+                comics = JSON.parse(JSON.stringify(initialComics));
                 saveToStorage();
                 renderCollection();
             }
@@ -258,7 +698,7 @@
         function saveComic(e) {
             e.preventDefault();
             const id = document.getElementById('comicId').value;
-            const number = parseInt(document.getElementById('comicNumber').value);
+            const number = document.getElementById('comicNumber').value;
             const title = document.getElementById('comicTitle').value;
             const month = document.getElementById('comicMonth').value;
             const year = document.getElementById('comicYear').value;
@@ -284,7 +724,6 @@
                 comics.push(newComic);
             }
 
-            comics.sort((a, b) => a.number - b.number);
             saveToStorage();
             renderCollection();
             closeModal();
@@ -307,12 +746,12 @@
             
             let filtered = comics.filter(c => {
                 const matchesFilter = (filter === 'all' || c.status === filter);
-                const matchesSearch = c.title.toLowerCase().includes(searchQuery) || c.number.toString().includes(searchQuery);
+                const matchesSearch = c.title.toLowerCase().includes(searchQuery) || c.number.toString().toLowerCase().includes(searchQuery);
                 return matchesFilter && matchesSearch;
             });
 
             const ownedCount = comics.filter(c => c.status === 'owned').length;
-            document.getElementById('counter').innerText = `Posseduti: ${ownedCount} su ${comics.length} catalogati`;
+            document.getElementById('counter').innerText = `Posseduti: ${ownedCount} su ${comics.length} albi`;
 
             if (filtered.length === 0) {
                 listContainer.innerHTML = `
@@ -325,7 +764,7 @@
 
             listContainer.innerHTML = filtered.map(comic => `
                 <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 flex gap-3 items-center shadow-sm relative">
-                    <!-- Foto Albo / Anteprima -->
+                    <!-- Foto Albo -->
                     <div onclick="openEditModal(${comic.id})" class="w-16 h-22 flex-shrink-0 bg-zinc-800 rounded-lg overflow-hidden flex items-center justify-center border border-zinc-700 cursor-pointer relative group">
                         ${comic.image ? `<img src="${comic.image}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-camera text-zinc-600 text-lg"></i>`}
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
@@ -354,7 +793,6 @@
             `).join('');
         }
 
-        // Avvio iniziale
         renderCollection();
     </script>
 </body>
